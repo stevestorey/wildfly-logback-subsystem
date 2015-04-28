@@ -5,8 +5,8 @@
 # Install: #
 
 ### copy ###
-*  standalone/configuration/logback-default.xml
-*  standalone/configuration/logging.properties
+*  standalone/configuration/logback-default.xml ([sample](https://github.com/Janario/wildfly-logback-subsystem/blob/master/src/test/java/examples/logback-default.xml))
+*  standalone/configuration/logging.properties ([sample](https://github.com/Janario/wildfly-logback-subsystem/blob/master/src/test/java/examples/logging.properties))
 
 ### standalone/configuration/standalone.xml ###
 *  remove &lt;extension module="org.jboss.as.logging"/&gt;

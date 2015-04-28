@@ -15,8 +15,8 @@
 *  remove &lt;subsystem xmlns="urn:jboss:domain:logging:2.0"&gt;...&lt;/subsystem&gt;
 *  add &lt;subsystem xmlns="urn:me.janario.logback:1.0"/&gt;
  
-* copy modules/system/layers/logback to wildfly-8.2.0.Final/modules/system/layers/logback
-* copy modules/layers.conf to wildfly-8.2.0.Final/modules/layers.conf
+* copy target/modules/system/layers/logback to wildfly-8.2.0.Final/modules/system/layers/logback
+* copy target/modules/layers.conf to wildfly-8.2.0.Final/modules/layers.conf
 
 
 ### Know Issues ###

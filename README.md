@@ -20,6 +20,5 @@
 
 
 ### Know Issues ###
-* NPE in async(MDC map) LogDiagnosticContextStorageInterceptor.processInvocation{MDC.getMap() &gt; LogbackMDCAdapter.getCopyOfContextMap}
 * After stop LoggerContext old Logger still with a reference of it(stoped and no more contextual)
 * Improve integration with LoggerContext logger-selector (levels and appenders)

@@ -5,7 +5,10 @@ import static org.jboss.as.controller.descriptions.ModelDescriptionConstants.OP;
 import static org.jboss.as.controller.descriptions.ModelDescriptionConstants.OP_ADDR;
 import static org.jboss.as.controller.descriptions.ModelDescriptionConstants.SUBSYSTEM;
 
+import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.LogManager;
 
 import javax.xml.stream.XMLStreamConstants;
@@ -28,11 +31,11 @@ import org.jboss.staxmapper.XMLElementReader;
 import org.jboss.staxmapper.XMLElementWriter;
 import org.jboss.staxmapper.XMLExtendedStreamReader;
 import org.jboss.staxmapper.XMLExtendedStreamWriter;
+import org.slf4j.MDC;
 import org.slf4j.bridge.SLF4JBridgeHandler;
+import org.slf4j.spi.MDCAdapter;
 
-import ch.qos.logback.classic.selector.ContextSelector;
-import ch.qos.logback.classic.util.ContextSelectorStaticBinder;
-import me.janario.logback.deployment.LogbackContextSelector;
+import ch.qos.logback.classic.util.LogbackMDCAdapter;
 
 /**
  * @author Janario Oliveira
@@ -58,11 +61,31 @@ public class LogbackExtension implements Extension {
 
     @Override
     public void initialize(ExtensionContext context) {
+        fixMDCAdapter();
         installJul();
         final SubsystemRegistration subsystem = context.registerSubsystem(SUBSYSTEM_NAME, 1, 0);
         final ManagementResourceRegistration registration = subsystem.registerSubsystemModel(LogbackDefinition.INSTANCE);
         registration.registerOperationHandler(GenericSubsystemDescribeHandler.DEFINITION, GenericSubsystemDescribeHandler.INSTANCE);
         subsystem.registerXMLElementWriter(parser);
+    }
+
+    private void fixMDCAdapter() {
+        // workaround to avoid NPE on EJB async calls
+        // NPE in async(MDC map) org.jboss.as.ejb3.component.interceptors.LogDiagnosticContextRecoveryInterceptor.processInvocation{MDC.getMap() &gt; LogbackMDCAdapter.getCopyOfContextMap}
+        final MDCAdapter mdcAdapter = MDC.getMDCAdapter();
+        try {
+            final Field copyOnInheritThreadLocal = LogbackMDCAdapter.class.getDeclaredField("copyOnInheritThreadLocal");
+            copyOnInheritThreadLocal.setAccessible(true);
+
+            copyOnInheritThreadLocal.set(mdcAdapter, new InheritableThreadLocal<Map<String, String>>() {
+                @Override
+                protected Map<String, String> initialValue() {
+                    return new ConcurrentHashMap<>();
+                }
+            });
+        } catch (IllegalAccessException | NoSuchFieldException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void installJul() {

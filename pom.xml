@@ -4,7 +4,7 @@
 
     <groupId>me.janario</groupId>
     <artifactId>wildfly-logback-subsystem</artifactId>
-    <version>1.0.0-beta1-SNAPSHOT</version>
+    <version>1.0.0-beta1</version>
 
     <name>WildFly: Logback Subsystem Artifact</name>
 
@@ -33,7 +33,7 @@
     <scm>
         <developerConnection>scm:git:ssh://git@bitbucket.org/janario_oliveira/wildfly-logback-subsystem.git
         </developerConnection>
-        <tag>HEAD</tag>
+        <tag>wildfly-logback-subsystem-1.0.0-beta1</tag>
     </scm>
 
     <build>

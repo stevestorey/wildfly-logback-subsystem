@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>me.janario</groupId>
     <artifactId>wildfly-logback-subsystem</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0-beta2-SNAPSHOT</version>
 
     <name>WildFly: Logback Subsystem Artifact</name>
 
@@ -32,7 +31,9 @@
         </developer>
     </developers>
     <scm>
-        <developerConnection>scm:git:ssh://git@bitbucket.org/janario_oliveira/wildfly-logback-subsystem.git</developerConnection>
+        <developerConnection>scm:git:ssh://git@bitbucket.org/janario_oliveira/wildfly-logback-subsystem.git
+        </developerConnection>
+        <tag>HEAD</tag>
     </scm>
 
     <build>
@@ -120,31 +121,25 @@
                         <phase>package</phase>
                         <configuration>
                             <target>
-                                <delete dir="target/modules"/>
-                                <property name="modules.dir" value="target/modules"/>
-                                <property name="lib.dir" value="${settings.localRepository}"/>
-                                <property name="layer.dir" value="${modules.dir}/system/layers/logback"/>
+                                <delete dir="target/modules" />
+                                <property name="modules.dir" value="target/modules" />
+                                <property name="lib.dir" value="${settings.localRepository}" />
+                                <property name="layer.dir" value="${modules.dir}/system/layers/logback" />
 
-                                <copydir src="target/classes/modules" dest="${modules.dir}"/>
+                                <copydir src="target/classes/modules" dest="${modules.dir}" />
 
-                                <copy file="target/${project.artifactId}-${project.version}.jar"
-                                      todir="${layer.dir}/me/janario/logback/main/"/>
+                                <copy file="target/${project.artifactId}-${project.version}.jar" todir="${layer.dir}/me/janario/logback/main/" />
 
                                 <!--Logback-->
-                                <copy file="${lib.dir}/ch/qos/logback/logback-classic/${logback.version}/logback-classic-${logback.version}.jar"
-                                      todir="${layer.dir}/ch/qos/logback/main"/>
-                                <copy file="${lib.dir}/ch/qos/logback/logback-core/${logback.version}/logback-core-${logback.version}.jar"
-                                      todir="${layer.dir}/ch/qos/logback/main"/>
+                                <copy file="${lib.dir}/ch/qos/logback/logback-classic/${logback.version}/logback-classic-${logback.version}.jar" todir="${layer.dir}/ch/qos/logback/main" />
+                                <copy file="${lib.dir}/ch/qos/logback/logback-core/${logback.version}/logback-core-${logback.version}.jar" todir="${layer.dir}/ch/qos/logback/main" />
 
                                 <!--Slf4j bridges-->
-                                <copy file="${lib.dir}/org/slf4j/log4j-over-slf4j/${slf4j.version}/log4j-over-slf4j-${slf4j.version}.jar"
-                                      todir="${layer.dir}/org/jboss/log4j/logmanager/main"/>
-                                <copy file="${lib.dir}/org/slf4j/jul-to-slf4j/${slf4j.version}/jul-to-slf4j-${slf4j.version}.jar"
-                                      todir="${layer.dir}/org/jboss/logging/jul-to-slf4j-stub/main"/>
+                                <copy file="${lib.dir}/org/slf4j/log4j-over-slf4j/${slf4j.version}/log4j-over-slf4j-${slf4j.version}.jar" todir="${layer.dir}/org/jboss/log4j/logmanager/main" />
+                                <copy file="${lib.dir}/org/slf4j/jul-to-slf4j/${slf4j.version}/jul-to-slf4j-${slf4j.version}.jar" todir="${layer.dir}/org/jboss/logging/jul-to-slf4j-stub/main" />
 
                                 <!--wildfly-logging-->
-                                <copy file="${lib.dir}/org/jboss/logging/jboss-logging/${jboss-logging.version}/jboss-logging-${jboss-logging.version}.jar"
-                                      todir="${layer.dir}/org/jboss/logging/main"/>
+                                <copy file="${lib.dir}/org/jboss/logging/jboss-logging/${jboss-logging.version}/jboss-logging-${jboss-logging.version}.jar" todir="${layer.dir}/org/jboss/logging/main" />
                             </target>
                         </configuration>
                     </execution>

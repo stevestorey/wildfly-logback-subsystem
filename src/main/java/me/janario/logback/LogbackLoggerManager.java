@@ -12,7 +12,7 @@ import me.janario.logback.deployment.LogbackContextSelector;
  * Just to override org.jboss.logmanager.LogManager so LogManager won't be initialized
  * Once it is the first class loaded sets some properties
  *
- * @see /META-INF/services/java.util.logging.LogManager
+ * see /META-INF/services/java.util.logging.LogManager
  * @see org.jboss.as.server.Main
  *
  *

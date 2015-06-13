@@ -12,6 +12,7 @@ import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.selector.ContextSelector;
 import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.classic.turbo.TurboFilter;
 import ch.qos.logback.classic.util.ContextInitializer;
 import ch.qos.logback.core.joran.spi.JoranException;
 import ch.qos.logback.core.util.Loader;
@@ -27,6 +28,7 @@ public class LogbackContextSelector implements ContextSelector {
     private final LoggerContext defaultContext;
     private final ConcurrentMap<String, LoggerContext> contextByName = new ConcurrentHashMap<>();
     private final ConcurrentMap<ClassLoader, LoggerContext> contextByClassLoader = new ConcurrentHashMap<>();
+    private final ConcurrentMap<LoggerContext, ClassLoader> classLoaderByContext = new ConcurrentHashMap<>();
 
     private final ThreadLocal<LoggerContext> threadContext = new ThreadLocal<>();
     private final ContextualAppenderAttachable<ILoggingEvent> contextualAppenders;
@@ -44,6 +46,16 @@ public class LogbackContextSelector implements ContextSelector {
         context.getTurboFilterList().add(levelFilter);
 
         contextualAppenders.registerContextual(context);
+    }
+
+    private void unwrapFilters(LoggerContext context) {
+        TurboFilter turboFilter = context.getTurboFilterList().stream().findFirst().orElse(null);
+        if (turboFilter instanceof ContextualLevelDecisionTurboFilter) {
+            ContextualLevelDecisionTurboFilter levelFilter = (ContextualLevelDecisionTurboFilter) turboFilter;
+            context.getTurboFilterList().clear();
+            context.getTurboFilterList().addAll(levelFilter.getOthers());
+        }
+        contextualAppenders.unregisterContextual(context);
     }
 
     @Override
@@ -86,8 +98,12 @@ public class LogbackContextSelector implements ContextSelector {
             }
             StatusPrinter.printInCaseOfErrorsOrWarnings(loggerContext);
 
+            if (contextByName.containsKey(contextName)) {
+                throw new IllegalStateException("ContextName already registred " + contextName);
+            }
             wrapFilters(loggerContext);
             contextByName.put(contextName, loggerContext);
+            classLoaderByContext.put(loggerContext, tcl);
             return loggerContext;
         });
     }
@@ -98,7 +114,12 @@ public class LogbackContextSelector implements ContextSelector {
         if (loggerContext != null && loggerContext != defaultContext) {
             loggerContext.getLogger(Logger.ROOT_LOGGER_NAME)
                     .debug("Stopping logger context {}", loggerContextName);
+            unwrapFilters(loggerContext);
             loggerContext.stop();
+            ClassLoader cl = classLoaderByContext.remove(loggerContext);
+            if (cl != null) {
+                contextByClassLoader.remove(cl);
+            }
         }
 
         return loggerContext;

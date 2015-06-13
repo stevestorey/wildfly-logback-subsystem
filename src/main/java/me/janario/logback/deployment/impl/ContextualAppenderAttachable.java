@@ -61,9 +61,9 @@ public final class ContextualAppenderAttachable<E extends ILoggingEvent>
     public void registerContextual(LoggerContext context) {
         //replace root appender to a one that select based on context
         try {
+            final Field aai = getAaiField();
+
             final Logger root = context.getLogger(Logger.ROOT_LOGGER_NAME);
-            final Field aai = Logger.class.getDeclaredField("aai");
-            aai.setAccessible(true);
             @SuppressWarnings("unchecked")
             AppenderAttachableImpl<E> appenders = (AppenderAttachableImpl<E>) aai.get(root);
             if (appenders == null) {
@@ -75,6 +75,24 @@ public final class ContextualAppenderAttachable<E extends ILoggingEvent>
         } catch (NoSuchFieldException | IllegalAccessException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void unregisterContextual(LoggerContext context) {
+        try {
+            AppenderAttachableImpl<E> appenders = appendersByContext.remove(context);
+            final Field aai = getAaiField();
+
+            final Logger root = context.getLogger(Logger.ROOT_LOGGER_NAME);
+            aai.set(root, appenders);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private Field getAaiField() throws NoSuchFieldException {
+        final Field aai = Logger.class.getDeclaredField("aai");
+        aai.setAccessible(true);
+        return aai;
     }
 
     @Override

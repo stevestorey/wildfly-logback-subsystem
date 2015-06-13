@@ -2,13 +2,13 @@ package me.janario.logback.deployment.impl;
 
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import me.janario.logback.deployment.LogbackContextSelector;
 import org.slf4j.Marker;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.turbo.TurboFilter;
 import ch.qos.logback.core.spi.FilterReply;
+import me.janario.logback.deployment.LogbackContextSelector;
 
 /**
  * @author Janario Oliveira
@@ -22,6 +22,10 @@ public final class ContextualLevelDecisionTurboFilter extends TurboFilter {
                                               CopyOnWriteArrayList<TurboFilter> others) {
         this.contextSelector = contextSelector;
         this.others = new CopyOnWriteArrayList<>(others);
+    }
+
+    public CopyOnWriteArrayList<TurboFilter> getOthers() {
+        return others;
     }
 
     @Override

@@ -29,7 +29,7 @@
             <emptyLine />
             <package name="" withSubpackages="true" static="false" />
             <emptyLine />
-            <package name="br.com.tecsinapse" withSubpackages="true" static="false" />
+            <package name="me.janario" withSubpackages="true" static="false" />
           </value>
         </option>
         <option name="JD_DO_NOT_WRAP_ONE_LINE_COMMENTS" value="true" />

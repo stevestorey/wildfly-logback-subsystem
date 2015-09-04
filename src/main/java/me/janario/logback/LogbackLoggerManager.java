@@ -1,8 +1,8 @@
 package me.janario.logback;
 
 import java.io.File;
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.logging.LogManager;
 
 import me.janario.logback.deployment.LogbackContextSelector;
@@ -24,15 +24,15 @@ public class LogbackLoggerManager extends LogManager {
     private void configure() {
         String logging = System.getProperty("logging.configuration");
         try {
-            final String path = new URI(logging).getPath();
-            File logbackDefault = new File(new File(path).getParent(), "logback-default.xml");
+            File cfgDir = new File(new URL(logging).getPath()).getParentFile();
+            File logbackDefault = new File(cfgDir, "logback-default.xml");
 
             //force to avoid custom modules to change auto detection
             System.setProperty("org.jboss.logging.provider", "slf4j");
             System.setProperty("logback.ContextSelector", LogbackContextSelector.class.getName());
             System.setProperty("logback.configurationFile", logbackDefault.getPath());
-        } catch (URISyntaxException e) {
-            throw new RuntimeException("Could not find file " + logging);
+        } catch (MalformedURLException e) {
+            throw new IllegalStateException("Could not find file " + logging, e);
         }
     }
 }

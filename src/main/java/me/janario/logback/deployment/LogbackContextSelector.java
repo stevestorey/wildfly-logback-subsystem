@@ -1,13 +1,5 @@
 package me.janario.logback.deployment;
 
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-
-import org.slf4j.helpers.Util;
-
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.selector.ContextSelector;
@@ -19,6 +11,13 @@ import ch.qos.logback.core.util.Loader;
 import ch.qos.logback.core.util.StatusPrinter;
 import me.janario.logback.deployment.impl.ContextualAppenderAttachable;
 import me.janario.logback.deployment.impl.ContextualLevelDecisionTurboFilter;
+import org.slf4j.helpers.Util;
+
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * @author Janario Oliveira
@@ -73,6 +72,10 @@ public class LogbackContextSelector implements ContextSelector {
         final ClassLoader tcl = Loader.getTCL();
         if (tcl == null) {
             return defaultContext;
+        }
+        LoggerContext lc = contextByClassLoader.get(tcl);
+        if (lc != null) {
+            return lc;
         }
         return contextByClassLoader.computeIfAbsent(tcl, cl -> {
             final URL logbackXml = cl.getResource("/logback.xml");

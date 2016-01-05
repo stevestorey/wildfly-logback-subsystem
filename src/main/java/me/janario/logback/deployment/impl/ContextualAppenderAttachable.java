@@ -1,10 +1,5 @@
 package me.janario.logback.deployment.impl;
 
-import java.lang.reflect.Field;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.spi.ILoggingEvent;
@@ -12,6 +7,11 @@ import ch.qos.logback.core.Appender;
 import ch.qos.logback.core.spi.AppenderAttachable;
 import ch.qos.logback.core.spi.AppenderAttachableImpl;
 import me.janario.logback.deployment.LogbackContextSelector;
+
+import java.lang.reflect.Field;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author Janario Oliveira
@@ -27,6 +27,10 @@ public final class ContextualAppenderAttachable<E extends ILoggingEvent>
     }
 
     private AppenderAttachableImpl<E> getContextual() {
+        AppenderAttachableImpl<E> a = appendersByContext.get(contextSelector.getLoggerContext());
+        if (a != null) {
+            return a;
+        }
         return appendersByContext.computeIfAbsent(contextSelector.getLoggerContext(), c -> new AppenderAttachableImpl<E>());
     }
 

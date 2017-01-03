@@ -5,7 +5,7 @@
     <appender name="FILE_DEFAULT" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${jboss.server.log.dir}/default.log</file>
         <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss,SSS} %-5p [%c{26}] \(%t\) %msg%n</pattern>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS,Europe/London} %-5p [%c{26}] \(%t\) %msg%n</pattern>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
             <fileNamePattern>${jboss.server.log.dir}/default.%i.log</fileNamePattern>
@@ -13,22 +13,19 @@
             <maxIndex>5</maxIndex>
         </rollingPolicy>
         <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
-            <maxFileSize>5MB</maxFileSize>
+            <maxFileSize>1MB</maxFileSize>
         </triggeringPolicy>
     </appender>
     <appender name="CONSOLE_DEFAULT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>%highlight(%d{yyyy-MM-dd HH:mm:ss,SSS} %-5p [%c{26}] \(%t\) %msg%n)</pattern>
+            <pattern>%green(%d{yyyy-MM-dd HH:mm:ss.SSS,Europe/London}) %boldCyan(%highlight(%-5p)) %cyan([%c{26}]) \(%t\) %msg%n)</pattern>
         </encoder>
     </appender>
 
-    <!--Default WF 8.2.0.Final-->
+    <!--Default WF 10.1.0.Final-->
     <logger name="com.arjuna" level="WARN"/>
-    <logger name="org.apache.tomcat.util.modeler" level="WARN"/>
     <logger name="org.jboss.as.config" level="DEBUG"/>
     <logger name="sun.rmi" level="WARN"/>
-    <logger name="jacorb" level="WARN"/>
-    <logger name="jacorb.config" level="ERROR"/>
 
     <root level="INFO">
         <appender-ref ref="FILE_DEFAULT"/>

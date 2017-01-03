@@ -75,10 +75,10 @@ public class LogbackExtension implements Extension {
         // NPE in async(MDC map) org.jboss.as.ejb3.component.interceptors.LogDiagnosticContextRecoveryInterceptor.processInvocation{MDC.getMap() &gt; LogbackMDCAdapter.getCopyOfContextMap}
         final MDCAdapter mdcAdapter = MDC.getMDCAdapter();
         try {
-            final Field copyOnInheritThreadLocal = LogbackMDCAdapter.class.getDeclaredField("copyOnInheritThreadLocal");
-            copyOnInheritThreadLocal.setAccessible(true);
+            final Field copyOnThreadLocal = LogbackMDCAdapter.class.getDeclaredField("copyOnThreadLocal");
+            copyOnThreadLocal.setAccessible(true);
 
-            copyOnInheritThreadLocal.set(mdcAdapter, new InheritableThreadLocal<Map<String, String>>() {
+            copyOnThreadLocal.set(mdcAdapter, new InheritableThreadLocal<Map<String, String>>() {
                 @Override
                 protected Map<String, String> initialValue() {
                     return new ConcurrentHashMap<>();

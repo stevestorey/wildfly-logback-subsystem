@@ -8,6 +8,7 @@
         <module name="org.slf4j"/>
         <module name="javax.api"/>
         <module name="javax.mail.api"/>
+        <module name="javax.servlet.api"/>
 
         <module name="org.codehaus.janino"/>
     </dependencies>

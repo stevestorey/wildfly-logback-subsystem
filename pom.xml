@@ -4,7 +4,7 @@
 
     <groupId>me.janario</groupId>
     <artifactId>wildfly-logback-subsystem</artifactId>
-    <version>3.0.0-SNAPSHOT</version>
+    <version>4.0.0-SNAPSHOT</version>
 
     <name>WildFly: Logback Subsystem Artifact</name>
 
@@ -13,16 +13,16 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <wildfly.version>10.1.0.Final</wildfly.version>
+        <wildfly.version>27.0.0.Final</wildfly.version>
         <module.name>me.janario.logback</module.name>
 
-        <logback.version>1.2.11</logback.version>
+        <logback.version>1.4.5</logback.version>
 
         <!--Same version of WildFly module-->
-        <slf4j.version>1.7.36</slf4j.version>
-        <jboss-logging.version>3.3.0.Final</jboss-logging.version>
-        <janino.version>2.7.8</janino.version>
-        <wildfly-core.version>2.0.10.Final</wildfly-core.version>
+        <slf4j.version>2.0.6</slf4j.version>
+        <jboss-logging.version>3.4.3.Final</jboss-logging.version>
+        <janino.version>3.1.8</janino.version>
+        <wildfly-core.version>19.0.1.Final</wildfly-core.version>
     </properties>
 
     <developers>
@@ -135,8 +135,10 @@
                                 <copy file="${lib.dir}/org/codehaus/janino/janino/${janino.version}/janino-${janino.version}.jar" todir="${layer.dir}/org/codehaus/janino/main" />
                                 <copy file="${lib.dir}/org/codehaus/janino/commons-compiler/${janino.version}/commons-compiler-${janino.version}.jar" todir="${layer.dir}/org/codehaus/janino/main" />
 
+                                <!--Slf4j API-->
+                                <copy file="${lib.dir}/org/slf4j/slf4j-api/${slf4j.version}/slf4j-api-${slf4j.version}.jar" todir="${layer.dir}/ch/qos/logback/main" />
+
                                 <!--Slf4j bridges-->
-                                <copy file="${lib.dir}/org/slf4j/log4j-over-slf4j/${slf4j.version}/log4j-over-slf4j-${slf4j.version}.jar" todir="${layer.dir}/org/jboss/log4j/logmanager/main" />
                                 <copy file="${lib.dir}/org/slf4j/jul-to-slf4j/${slf4j.version}/jul-to-slf4j-${slf4j.version}.jar" todir="${layer.dir}/org/jboss/logging/jul-to-slf4j-stub/main" />
 
                                 <!--wildfly-logging-->

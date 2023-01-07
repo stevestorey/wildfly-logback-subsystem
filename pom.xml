@@ -16,10 +16,10 @@
         <wildfly.version>10.1.0.Final</wildfly.version>
         <module.name>me.janario.logback</module.name>
 
-        <logback.version>1.2.2</logback.version>
+        <logback.version>1.2.11</logback.version>
 
         <!--Same version of WildFly module-->
-        <slf4j.version>1.7.7</slf4j.version>
+        <slf4j.version>1.7.36</slf4j.version>
         <jboss-logging.version>3.3.0.Final</jboss-logging.version>
         <janino.version>2.7.8</janino.version>
         <wildfly-core.version>2.0.10.Final</wildfly-core.version>

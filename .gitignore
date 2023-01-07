@@ -24,3 +24,6 @@ release.properties
 .idea/*
 !.idea/codeStyleSettings.xml
 !.idea/encodings.xml
+
+# VS Code
+.vscode/

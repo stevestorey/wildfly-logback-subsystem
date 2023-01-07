@@ -25,7 +25,9 @@ public class LogbackLoggerManager extends LogManager {
         String logging = System.getProperty("logging.configuration");
         try {
             File cfgDir = new File(new URL(logging).getPath()).getParentFile();
-            File logbackDefault = new File(cfgDir, "logback-default.xml");
+            String logbackFileName = System.getProperty(
+                    "me.janario.logback.fileName", "logback-default.xml");
+            File logbackDefault = new File(cfgDir, logbackFileName);
 
             //force to avoid custom modules to change auto detection
             System.setProperty("org.jboss.logging.provider", "slf4j");

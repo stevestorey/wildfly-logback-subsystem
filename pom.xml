@@ -13,16 +13,16 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <wildfly.version>27.0.0.Final</wildfly.version>
+        <wildfly.version>34.0.0.Final</wildfly.version>
         <module.name>me.janario.logback</module.name>
 
-        <logback.version>1.4.5</logback.version>
+        <logback.version>1.5.11</logback.version>
 
         <!--Same version of WildFly module-->
-        <slf4j.version>2.0.6</slf4j.version>
-        <jboss-logging.version>3.4.3.Final</jboss-logging.version>
+        <slf4j.version>2.0.16</slf4j.version>
+        <jboss-logging.version>3.6.1.Final</jboss-logging.version>
         <janino.version>3.1.8</janino.version>
-        <wildfly-core.version>19.0.1.Final</wildfly-core.version>
+        <wildfly-core.version>26.0.1.Final</wildfly-core.version>
     </properties>
 
     <developers>

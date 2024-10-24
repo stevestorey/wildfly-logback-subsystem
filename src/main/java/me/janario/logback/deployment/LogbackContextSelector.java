@@ -1,23 +1,24 @@
 package me.janario.logback.deployment;
 
-import ch.qos.logback.classic.Logger;
-import ch.qos.logback.classic.LoggerContext;
-import ch.qos.logback.classic.selector.ContextSelector;
-import ch.qos.logback.classic.spi.ILoggingEvent;
-import ch.qos.logback.classic.turbo.TurboFilter;
-import ch.qos.logback.classic.util.ContextInitializer;
-import ch.qos.logback.core.joran.spi.JoranException;
-import ch.qos.logback.core.util.Loader;
-import ch.qos.logback.core.util.StatusPrinter;
-import me.janario.logback.deployment.impl.ContextualAppenderAttachable;
-import me.janario.logback.deployment.impl.ContextualLevelDecisionTurboFilter;
-import org.slf4j.helpers.Util;
-
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+
+import org.slf4j.helpers.Reporter;
+
+import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.LoggerContext;
+import ch.qos.logback.classic.selector.ContextSelector;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.classic.turbo.TurboFilter;
+import ch.qos.logback.classic.util.DefaultJoranConfigurator;
+import ch.qos.logback.core.joran.spi.JoranException;
+import ch.qos.logback.core.util.Loader;
+import ch.qos.logback.core.util.StatusPrinter2;
+import me.janario.logback.deployment.impl.ContextualAppenderAttachable;
+import me.janario.logback.deployment.impl.ContextualLevelDecisionTurboFilter;
 
 /**
  * @author Janario Oliveira
@@ -31,6 +32,7 @@ public class LogbackContextSelector implements ContextSelector {
 
     private final ThreadLocal<LoggerContext> threadContext = new ThreadLocal<>();
     private final ContextualAppenderAttachable<ILoggingEvent> contextualAppenders;
+    private static final StatusPrinter2 SP = new StatusPrinter2();
 
     public LogbackContextSelector(LoggerContext defaultContext) {
         this.defaultContext = defaultContext;
@@ -93,13 +95,15 @@ public class LogbackContextSelector implements ContextSelector {
             //configureByResource calls recursive getLoggerContext
             threadContext.set(loggerContext);
             try {
-                new ContextInitializer(loggerContext).configureByResource(logbackXml);
+                DefaultJoranConfigurator configurator =new DefaultJoranConfigurator();
+                configurator.setContext(loggerContext);
+                configurator.configureByResource(logbackXml);
             } catch (JoranException je) {
-                Util.report("Failed to auto configure default logger context", je);
+                Reporter.error("Failed to auto configure default logger context", je);
             } finally {
                 threadContext.remove();
             }
-            StatusPrinter.printInCaseOfErrorsOrWarnings(loggerContext);
+            SP.printInCaseOfErrorsOrWarnings(loggerContext);
 
             if (contextByName.containsKey(contextName)) {
                 throw new IllegalStateException("ContextName already registred " + contextName);
